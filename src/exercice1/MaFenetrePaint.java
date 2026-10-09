@@ -12,12 +12,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.BorderLayout;
 
 public class MaFenetrePaint extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
-	// On utilise directement MonPanneau comme conteneur principal
 	private MonPanneau contentPane;
 
 	/**
@@ -47,9 +46,9 @@ public class MaFenetrePaint extends JFrame {
 		contentPane = new MonPanneau();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout(0, 0));
 
-		// 2. Barre de menu
+		// Barre de menu
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		

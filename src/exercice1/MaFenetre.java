@@ -1,7 +1,6 @@
 package exercice1;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +14,12 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.JMenu;
+import java.awt.Toolkit;
 
 public class MaFenetre extends JFrame {
 
@@ -22,7 +27,6 @@ public class MaFenetre extends JFrame {
 	private JPanel contentPane;
 	private JLabel lblRacine1;
 	private JLabel lblRacine2;
-	//private MonPanneau contentPane2;
 
 	/**
 	 * Launch the application.
@@ -44,42 +48,41 @@ public class MaFenetre extends JFrame {
 	 * Create the frame.
 	 */
 	public MaFenetre() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MaFenetre.class.getResource("/exercice1/meme.jpg")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Lancer le programme");
-		mntmNewMenuItem.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		mntmNewMenuItem.setBackground(new Color(0, 255, 0));
-		mntmNewMenuItem.addActionListener(new ActionListener() {
+		JMenu menutp = new JMenu("Menu principal");
+		menutp.setBackground(SystemColor.info);
+		menuBar.add(menutp);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Lancer le programme");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// 1. Instanciation et affichage de la boîte modale
 				MonJDialog dialog = new MonJDialog();
-				dialog.setVisible(true); // Bloque l'exécution ici tant que la boîte est ouverte
+				dialog.setVisible(true);
 
-				// 2. Si l'utilisateur a cliqué sur OK (saisie valide)
 				if (dialog.isValide()) {
-				    // Récupération des coefficients
 				    double a = dialog.getA();
 				    double b = dialog.getB();
 				    double c = dialog.getC();
 
-				    // Calcul de l'équation
 				    Eqdegre2 eq = new Eqdegre2(a, b, c);
 
-				    // Affichage du résultat dans les deux JLabel de MaFenetre
 				    lblRacine1.setText("Résultat : " + eq.toString());
 				    lblRacine2.setText("Coefficients : a = " + a + ", b = " + b + ", c = " + c);
 				}
 			}
 		});
-		menuBar.add(mntmNewMenuItem);
+		mntmNewMenuItem_3.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		mntmNewMenuItem_3.setBackground(Color.GREEN);
+		menutp.add(mntmNewMenuItem_3);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("aide");
-		mntmNewMenuItem_1.setBackground(new Color(255, 255, 0));
-		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+		JMenuItem mntmNewMenuItem_1_1 = new JMenuItem("aide");
+		mntmNewMenuItem_1_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(MaFenetre.this, 
 					    "Application de résolution d'équation du 2nd degré.", 
@@ -87,42 +90,54 @@ public class MaFenetre extends JFrame {
 					    JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		menuBar.add(mntmNewMenuItem_1);
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Quitter");
-		mntmNewMenuItem_2.setBackground(new Color(255, 0, 0));
-		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+		mntmNewMenuItem_1_1.setBackground(Color.YELLOW);
+		menutp.add(mntmNewMenuItem_1_1);
+		
+		JMenuItem mntmNewMenuItem_2_1 = new JMenuItem("Quitter");
+		mntmNewMenuItem_2_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});
-		menuBar.add(mntmNewMenuItem_2);
+		mntmNewMenuItem_2_1.setBackground(Color.RED);
+		menutp.add(mntmNewMenuItem_2_1);
+
+		// --- CONTENEUR PRINCIPAL (BorderLayout) ---
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		lblRacine1 = new JLabel("Racine 1 ");
-		lblRacine1.setBounds(20, 160, 390, 20); // Largeur passée à 390 px
-		contentPane.add(lblRacine1);
-		
-		lblRacine2 = new JLabel("Racine 2");
-		lblRacine2.setBounds(20, 190, 390, 20);
-		contentPane.add(lblRacine2);
-		
-		// 1. Chargement de l'image d'origine
+		contentPane.setLayout(new BorderLayout(0, 10));
+
+		// 1. PANNEAU IMAGE (Au centre)
 		ImageIcon originalIcon = new ImageIcon(MaFenetre.class.getResource("/exercice1/meme.jpg"));
-				
-		//  Redimensionnement 
-		java.awt.Image img = originalIcon.getImage();
-		java.awt.Image resizedImg = img.getScaledInstance(125, 125, java.awt.Image.SCALE_SMOOTH);
-				
-		// 3. Application de l'image redimensionnée sur le JLabel
-		JLabel image_test = new JLabel("");
-		image_test.setIcon(new ImageIcon(resizedImg));
-		image_test.setBounds(38, 10, 125, 125);
-		contentPane.add(image_test);
+		Image img = originalIcon.getImage();
 
+		JPanel panelImage = new JPanel() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if (img != null) {
+					// Dessine l'image en s'adaptant exactement à la taille du panneau
+					g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+				}
+			}
+		};
+		panelImage.setBackground(Color.WHITE);
+		contentPane.add(panelImage, BorderLayout.CENTER);
+
+		// 2. PANNEAU RÉSULTATS (En bas avec ton GridLayout)
+		JPanel panelResultats = new JPanel();
+		panelResultats.setBackground(Color.WHITE);
+		panelResultats.setLayout(new GridLayout(2, 1, 0, 5)); // 2 lignes, 1 colonne
+
+		lblRacine1 = new JLabel("Racine 1 ");
+		panelResultats.add(lblRacine1);
+
+		lblRacine2 = new JLabel("Racine 2");
+		panelResultats.add(lblRacine2);
+
+		contentPane.add(panelResultats, BorderLayout.SOUTH);
 	}
-
 }
